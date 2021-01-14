@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>calculadora</title>
+</head>
+<style>
+* {
+	border: 0;
+	margin: 0;
+	user-select: none;
+}
+.calculadora div{
+	border-radius: 40px 120px 60px;
+	background-color: aquamarine;
+	display: inline-block;
+	width: 90px;
+	height: 90px;
+    text-align: center;
+    font-size: 55px;
+}
+.calculadora div:hover{
+	background-color: rgb(81, 204, 163);
+}
+.calculadora div:active{
+    background-color: rgb(53, 145, 114);
+}
+.calculadora{
+    display: flex;
+    flex-flow: row wrap;
+    width:360px;
+    
+}
+.visualisador{
+    font-size: 55px;
+}
+</style>
+<body>
+	<div class="calculadora">
+        
+		<div class="borrartodo">CE</div>
+		<div class="borrar">C</div>
+		<div class="operador">/</div>
+        <div class="relleno"></div>
+        
+		<div class="numero">7</div>
+		<div class="numero">8</div>
+		<div class="numero">9</div>
+		<div class="operador">x</div>
+
+        
+		<div class="numero ">4</div>
+		<div class="numero">5</div>
+		<div class="numero">6</div>
+		<div class="operador">-</div>
+
+        
+		<div class="numero">1</div>
+		<div class="numero">2</div>
+		<div class="numero">3</div>
+		<div class="operador">+</div>
+
+        
+		<div class="numero">0</div>
+		<div class="decimal">.</div>
+		<div class="igual">=</div>
+	</div>
+	<div class="visualisador"></div>
+	<div class="salidaprevia"></div>
+	<script>
+		let salidaprevia = document.querySelector(".salidaprevia")
+		let igual = document.querySelector(".igual")
+		let decimal = document.querySelector(".decimal")
+		let borrar = document.querySelector(".borrar")
+		let borrartodo = document.querySelector(".borrartodo");
+        let visualisador = document.querySelector(".visualisador");
+        let numero = document.querySelectorAll(".numero");
+        let operador = document.querySelectorAll(".operador");
+		let puntodecimal = false;
+
+        for (let i = 0; i < numero.length; i++) {
+            numero[i].addEventListener("click", function () {
+				visualisador.textContent += this.textContent
+				if(visualisador.textContent.includes('/')){
+					numero1 = parseFloat(visualisador.textContent)
+					numero2 = parseFloat(visualisador.textContent.slice(numero1.toString().length+1))
+					salidaprevia.textContent=numero1/numero2
+					
+				}
+				else if(visualisador.textContent.includes('+')){
+					numero1 = parseFloat(visualisador.textContent)
+					numero2 = parseFloat(visualisador.textContent.slice(numero1.toString().length+1))
+					salidaprevia.textContent=numero1+numero2
+					
+				}
+				else if(visualisador.textContent.includes('-')){
+					numero1 = parseFloat(visualisador.textContent)
+					numero2 = parseFloat(visualisador.textContent.slice(numero1.toString().length+1))
+					salidaprevia.textContent=numero1-numero2
+					
+				}
+				else if(visualisador.textContent.includes('x')){
+					numero1 = parseFloat(visualisador.textContent)
+					numero2 = parseFloat(visualisador.textContent.slice(numero1.toString().length+1))
+					salidaprevia.textContent=numero1*numero2
+					
+				}
+            });
+            
+        }
+        for (let i = 0; i < operador.length; i++) {
+            operador[i].addEventListener("click", function () {
+                
+                if(visualisador.textContent[visualisador.textContent.length -1].includes('/')||
+                visualisador.textContent[visualisador.textContent.length -1].includes('+') ||
+                visualisador.textContent[visualisador.textContent.length -1].includes('-') ||
+                visualisador.textContent[visualisador.textContent.length -1].includes('x')){
+					if(visualisador.textContent[visualisador.textContent.length -1]
+					==
+					operador[i].textContent){
+					}
+					else{
+						visualisador.textContent=visualisador.textContent.slice(0,-1);
+						visualisador.textContent += this.textContent
+						puntodecimal = false
+					}
+				}
+                else {
+					visualisador.textContent += this.textContent
+					puntodecimal = false
+				}
+	        });
+		}
+		borrartodo.addEventListener("click",function(){
+			visualisador.textContent = ""
+			salidaprevia.textContent = ""
+			puntodecimal = false
+		})
+		borrar.addEventListener("click",function(){
+			visualisador.textContent=visualisador.textContent.slice(0,-1);
+		})
+		decimal.addEventListener("click",function(){
+			if(visualisador.textContent[visualisador.textContent.length -1].includes('/')||
+                visualisador.textContent[visualisador.textContent.length -1].includes('+') ||
+                visualisador.textContent[visualisador.textContent.length -1].includes('-') ||
+                visualisador.textContent[visualisador.textContent.length -1].includes('x')){
+					
+			}
+			else {
+				if(visualisador.textContent[visualisador.textContent.length -1].includes('.')){
+
+				}
+				else{
+					if(puntodecimal){
+
+					}else{
+						visualisador.textContent += "."
+						puntodecimal = true
+					} 
+				} 
+			}
+				
+		})
+        igual.addEventListener("click",function(){
+			visualisador.textContent = salidaprevia.textContent
+			salidaprevia.textContent = ""
+		})
+        /* function mieval(elstring){
+			//resive una cadena y devuelve la operacion eval() :V
+			elarray=Array.from(elstring)
+			console.log(elarray.length)
+			productoycociente = false
+			sumayresta = false
+			operaciones = []
+			numeros = []
+			contador = 0
+			for(let i = 0;i<elarray.length;i++){//recorre todo el aaray
+				if(elarray[i]=="x"||elarray[i]=="/"){//detector de multiplicacion y division
+					productoycociente = true
+					operaciones.push(elarray[i])
+				}
+				else if(elarray[i]=="+"||elarray[i]=="-"){//detector de sumas y restaas
+					sumayresta = true
+					operaciones.push(elarray[i])
+					numeros.push(elarray.slice(0,1))
+					
+				}
+				else{
+					//si sigue o no
+					numeros.push(elarray[i])
+					numeros[contador]
+				}
+			}
+			console.log(operaciones)
+			console.log(numeros)
+		} */
+	</script>
+</body>
+</html>
